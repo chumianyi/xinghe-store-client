@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 登录页 -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:text="@string/login_title"
+                android:textColor="@color/text"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView style="@style/FormLabel" android:text="@string/login_email" />
+            <EditText
+                android:id="@+id/login_email"
+                style="@style/FormInput"
+                android:inputType="textEmailAddress" />
+
+            <TextView style="@style/FormLabel" android:text="@string/login_password" />
+            <EditText
+                android:id="@+id/login_password"
+                style="@style/FormInput"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/BtnPrimary"
+                android:layout_marginTop="16dp"
+                android:text="@string/login_submit" />
+
+            <TextView
+                android:id="@+id/btn_to_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:text="@string/login_to_register"
+                android:textColor="@color/primary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

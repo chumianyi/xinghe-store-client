@@ -1,0 +1,15 @@
+# 构建产物
+build/
+dist/
+*.apk
+*.ap_
+*.dex
+keystore/
+*.jks
+
+# 本地配置
+local.properties
+.idea/
+*.iml
+.gradle/
+.DS_Store

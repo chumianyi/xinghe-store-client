@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 投稿表单 -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/submit_tip"
+            android:textColor="@color/text_sub"
+            android:textSize="12sp" />
+
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_name" />
+            <EditText android:id="@+id/sub_name" style="@style/FormInput" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/FormLabel" android:text="@string/submit_version" />
+                    <EditText android:id="@+id/sub_version" style="@style/FormInput" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/FormLabel" android:text="@string/submit_size" />
+                    <EditText android:id="@+id/sub_size" style="@style/FormInput" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_platform" />
+            <Spinner
+                android:id="@+id/sub_platform"
+                android:layout_width="fill_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/input_bg"
+                android:paddingLeft="8dp" />
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_desc" />
+            <EditText android:id="@+id/sub_desc" style="@style/FormInputMulti" />
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_download_url" />
+            <EditText
+                android:id="@+id/sub_download_url"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_category" />
+            <EditText android:id="@+id/sub_category" style="@style/FormInput" />
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_icon_url" />
+            <EditText
+                android:id="@+id/sub_icon_url"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/FormLabel" android:text="@string/submit_min_version" />
+                    <EditText android:id="@+id/sub_min_version" style="@style/FormInput" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/FormLabel" android:text="@string/submit_arch" />
+                    <EditText android:id="@+id/sub_arch" style="@style/FormInput" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/CardTitle" android:layout_marginTop="12dp" android:text="@string/submit_netdisk" />
+
+            <TextView style="@style/FormLabel" android:text="百度网盘" />
+            <EditText
+                android:id="@+id/sub_baidu"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <TextView style="@style/FormLabel" android:text="夸克网盘" />
+            <EditText
+                android:id="@+id/sub_quark"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <TextView style="@style/FormLabel" android:text="迅雷网盘" />
+            <EditText
+                android:id="@+id/sub_xunlei"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <TextView style="@style/FormLabel" android:text="小飞机网盘" />
+            <EditText
+                android:id="@+id/sub_feijige"
+                style="@style/FormInput"
+                android:inputType="textUri" />
+
+            <TextView style="@style/FormLabel" android:text="@string/submit_coins" />
+            <EditText
+                android:id="@+id/sub_coins"
+                style="@style/FormInput"
+                android:inputType="number"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/btn_submit_do"
+                style="@style/BtnPrimary"
+                android:layout_marginTop="16dp"
+                android:text="@string/submit_do" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

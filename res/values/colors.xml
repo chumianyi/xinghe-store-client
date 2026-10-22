@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 星河主题色板 -->
+    <color name="primary">#5B5FDE</color>
+    <color name="primary_dark">#3D41A8</color>
+    <color name="accent">#8B7CF6</color>
+    <color name="star">#FFC94D</color>
+    <color name="header_start">#232052</color>
+    <color name="header_end">#4A3F8C</color>
+    <color name="bg">#F1F2F7</color>
+    <color name="card">#FFFFFF</color>
+    <color name="text">#22233B</color>
+    <color name="text_sub">#8A8CA8</color>
+    <color name="text_hint">#B3B6CC</color>
+    <color name="divider">#E4E6F0</color>
+    <color name="pressed">#E8E9F8</color>
+    <color name="tag_ios">#4A6CF7</color>
+    <color name="tag_android">#34A853</color>
+    <color name="tag_pwa">#F2994A</color>
+    <color name="danger">#E5484D</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

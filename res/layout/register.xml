@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 注册页 -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:text="@string/register_title"
+                android:textColor="@color/text"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView style="@style/FormLabel" android:text="QQ邮箱（仅支持@qq.com）" />
+            <EditText
+                android:id="@+id/reg_email"
+                style="@style/FormInput"
+                android:inputType="textEmailAddress" />
+
+            <TextView style="@style/FormLabel" android:text="@string/register_code" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/reg_code"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/input_bg"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn_send_code"
+                    style="@style/BtnSmall"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/register_send_code" />
+            </LinearLayout>
+
+            <TextView style="@style/FormLabel" android:text="设置密码（至少6位）" />
+            <EditText
+                android:id="@+id/reg_password"
+                style="@style/FormInput"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/btn_register"
+                style="@style/BtnPrimary"
+                android:layout_marginTop="16dp"
+                android:text="@string/register_submit" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

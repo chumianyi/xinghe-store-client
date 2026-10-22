@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 应用详情页 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/HeaderBar">
+
+        <TextView
+            android:id="@+id/btn_back"
+            style="@style/HeaderButton"
+            android:text="@string/back" />
+
+        <TextView
+            android:id="@+id/header_title"
+            style="@style/HeaderTitle"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/btn_favorite"
+            style="@style/HeaderButton"
+            android:text="@string/detail_favorite_add" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <!-- 应用信息卡 -->
+            <LinearLayout style="@style/Card">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/detail_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_app_default" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/detail_name"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/detail_uploader"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_sub"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/detail_tags"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_hint"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@color/divider" />
+
+                <!-- 信息行 -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_size" />
+                    <TextView android:id="@+id/meta_size" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_version" />
+                    <TextView android:id="@+id/meta_version" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_platform" />
+                    <TextView android:id="@+id/meta_platform" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_min_version" />
+                    <TextView android:id="@+id/meta_min_version" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_arch" />
+                    <TextView android:id="@+id/meta_arch" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_category" />
+                    <TextView android:id="@+id/meta_category" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_download_count" />
+                    <TextView android:id="@+id/meta_download_count" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_rating" />
+                    <TextView android:id="@+id/meta_rating" style="@style/MetaValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/MetaLabel" android:text="@string/label_coins" />
+                    <TextView android:id="@+id/meta_coins" style="@style/MetaValue" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 下载操作 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <Button
+                    android:id="@+id/btn_download"
+                    style="@style/BtnPrimary"
+                    android:text="@string/detail_download" />
+
+                <LinearLayout
+                    android:id="@+id/netdisk_buttons"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- 简介 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView style="@style/CardTitle" android:text="@string/detail_desc" />
+
+                <TextView
+                    android:id="@+id/detail_desc"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_sub"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- 评论区 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/comment_title"
+                        style="@style/CardTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:paddingBottom="0dp"
+                        android:text="@string/detail_comments" />
+
+                    <Button
+                        android:id="@+id/btn_write_comment"
+                        style="@style/BtnSmall"
+                        android:text="@string/detail_write_comment" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RatingBar
+                        android:id="@+id/comment_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:numStars="5"
+                        android:rating="5"
+                        android:stepSize="1" />
+
+                    <EditText
+                        android:id="@+id/comment_content"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/input_bg"
+                        android:gravity="top"
+                        android:hint="说点什么吧（最多500字）"
+                        android:minLines="2"
+                        android:padding="8dp"
+                        android:textColor="@color/text"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btn_submit_comment"
+                        style="@style/BtnPrimary"
+                        android:layout_marginTop="8dp"
+                        android:text="发表评论" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
