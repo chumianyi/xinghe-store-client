@@ -66,7 +66,12 @@ if [ ! -x "$AAPT" ]; then
     tmpzip="$BUILD_DIR/build-tools.zip"
     mkdir -p "$BUILD_DIR"
     curl -fsSL -o "$tmpzip" "$BT_URL"
+    rm -rf "$BT_DIR" "$SDK_DIR/build-tools/android-4.4.2"
     unzip -q -o "$tmpzip" -d "$SDK_DIR/build-tools"
+    # 该 zip 的解包根目录名是 android-4.4.2，统一改名为版本号目录
+    if [ -d "$SDK_DIR/build-tools/android-4.4.2" ]; then
+        mv "$SDK_DIR/build-tools/android-4.4.2" "$BT_DIR"
+    fi
     chmod +x "$BT_DIR"/aapt "$BT_DIR"/dx "$BT_DIR"/zipalign 2>/dev/null || true
     rm -f "$tmpzip"
 fi
