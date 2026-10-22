@@ -9,14 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 本地数据库：收藏夹 + 下载记录 */
+/** 本地数据库：收藏夹 + 浏览记录 + 下载记录 */
 public class DB extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "xinghe.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private static final String T_FAV = "favorites";
     private static final String T_HIS = "history";
+    private static final String T_DL = "downloads";
 
     public DB(Context c) {
         super(c, DB_NAME, null, DB_VERSION);
@@ -36,13 +37,29 @@ public class DB extends SQLiteOpenHelper {
                 + "name TEXT,"
                 + "action TEXT,"
                 + "ts INTEGER)");
+        db.execSQL("CREATE TABLE " + T_DL + " ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "app_id TEXT,"
+                + "name TEXT,"
+                + "path TEXT,"
+                + "mime TEXT,"
+                + "size INTEGER,"
+                + "ts INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
-        db.execSQL("DROP TABLE IF EXISTS " + T_FAV);
-        db.execSQL("DROP TABLE IF EXISTS " + T_HIS);
-        onCreate(db);
+        // 只增不删：老用户升级后保留收藏与浏览记录
+        if (oldV < 2) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + T_DL + " ("
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "app_id TEXT,"
+                    + "name TEXT,"
+                    + "path TEXT,"
+                    + "mime TEXT,"
+                    + "size INTEGER,"
+                    + "ts INTEGER)");
+        }
     }
 
     // ---------- 收藏 ----------
@@ -115,5 +132,46 @@ public class DB extends SQLiteOpenHelper {
     public void clearHistory() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(T_HIS, null, null);
+    }
+
+    // ---------- 下载记录 ----------
+
+    public void addDownload(String appId, String name, String path, String mime, long size) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues v = new ContentValues();
+        v.put("app_id", appId);
+        v.put("name", name);
+        v.put("path", path);
+        v.put("mime", mime);
+        v.put("size", size);
+        v.put("ts", System.currentTimeMillis());
+        db.insert(T_DL, null, v);
+    }
+
+    /** 返回 {id, app_id, name, path, mime, size, ts} */
+    public List<String[]> listDownloads() {
+        List<String[]> out = new ArrayList<String[]>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.query(T_DL,
+                new String[]{"id", "app_id", "name", "path", "mime", "size", "ts"},
+                null, null, null, null, "ts DESC LIMIT 500");
+        while (cur.moveToNext()) {
+            out.add(new String[]{
+                    cur.getString(0), cur.getString(1), cur.getString(2),
+                    cur.getString(3), cur.getString(4),
+                    String.valueOf(cur.getLong(5)), String.valueOf(cur.getLong(6))});
+        }
+        cur.close();
+        return out;
+    }
+
+    public void deleteDownload(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(T_DL, "id=?", new String[]{id});
+    }
+
+    public void clearDownloads() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(T_DL, null, null);
     }
 }

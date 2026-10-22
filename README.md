@@ -12,20 +12,22 @@
 
 | 模块 | 说明 |
 | --- | --- |
+| 底部导航 | 首页 / 搜索 / 下载记录 / 收藏 / 我的，一键直达 |
 | 应用浏览 | 全部 / 安卓 / iOS / PWA 四个标签页，滑动切换，下拉式分页加载 |
 | 搜索 | 按名称 / 简介 / 分类实时搜索（输入 2 字符即触发） |
 | 排行榜 | 按真实下载量取前 50 |
 | 详情 | 大小 / 版本 / 平台 / 系统要求 / 架构 / 分类 / 评分 / 金币价 |
-| 下载 | 直链文件内置下载器（进度对话框 + 完成通知 + 一键打开）；网盘链接一键复制并跳转浏览器 |
-| 网盘 | 百度 / 夸克 / 迅雷 / 小飞机网盘链接单独成按钮 |
+| 应用内解析 | 网盘链接在**内置 WebView 页面**解析，不跳外部浏览器；检测到下载请求弹出确认框（文件名/大小/类型） |
+| 下载 | 直链文件应用内下载器（进度对话框 + 完成通知）；下载完毕自动跳转「下载记录」 |
+| 下载记录 | 本地记录所有下载；APK 一键安装、IPA 一键分享、其他文件查看器打开 |
 | 收藏夹 | 本地 SQLite 收藏，跨会话保留 |
-| 下载记录 | 本地记录浏览 / 下载行为，可一键清空 |
+| 浏览记录 | 本地记录浏览行为，可一键清空 |
 | 评论 | 查看评论（星级渲染） + 评分提交（1-5 星） |
 | 账号 | QQ 邮箱注册（验证码 60 秒倒计时）、登录、资料编辑、每日签到金币 |
 | 投稿 | 完整投稿表单（平台 / 版本 / 大小 / 网盘链接 / 金币定价） |
 | 消息 | 自己上传应用收到的评论通知 |
 | 设置 | 检查更新（服务端 `/old/version`）、清除图标缓存、关于 |
-| 主题 | 星河渐变紫主题，自定义标题栏与标签栏 |
+| 主题 | 星河渐变紫主题，自定义标题栏、标签栏与底部导航 |
 
 ## 兼容性要点（Android 1.5 / API 3）
 
@@ -36,10 +38,12 @@
 | `Build.VERSION.SDK_INT`（API 4+） | 解析 `Build.VERSION.SDK` 字符串（`Utils.sdkInt()`） |
 | `TabSpec.setIndicator(View)`（API 4+） | 反射调用，失败退回文字标签 |
 | `ClipboardManager`（API 11+） | 反射调用 `android.content.ClipboardManager`，失败退回 `android.text.ClipboardManager` |
+| `android:selected` 属性（API 11+） | 代码 `View.setSelected()` |
 | `insertWithOnConflict`（API 8+） | `delete + insert` |
 | `LruCache`（API 12+） | `SoftReference` + `HashMap` |
 | `DownloadManager`（API 9+） | 自实现 `HttpURLConnection` 下载器 |
-| `getExternalCacheDir`（API 8+） | `Environment.getExternalStorageDirectory()` |
+| `setDomStorageEnabled`（API 7+） | 反射启用（网盘页面需要 localstorage） |
+| `file://` 跨应用传递（API 24+ 禁止） | 自实现 `ApkFileProvider`（ContentProvider）暴露 content:// |
 | v2 APK 签名（API 24+） | `jarsigner` v1 签名（API 3 设备唯一支持） |
 
 语言级别锁定 Java 6（无菱形语法、无 try-with-resources、无字符串 switch）。

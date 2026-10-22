@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@color/bg">
+    android:background="@color/bg"
+    android:orientation="vertical">
 
     <!-- 自定义标题栏 -->
     <LinearLayout style="@style/HeaderBar">
@@ -16,9 +16,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingLeft="8dp">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -35,16 +35,6 @@
                 android:textColor="#9FA0D8"
                 android:textSize="9sp" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/btn_header_search"
-            style="@style/HeaderButton"
-            android:text="@string/menu_search" />
-
-        <TextView
-            android:id="@+id/btn_header_me"
-            style="@style/HeaderButton"
-            android:text="@string/menu_me" />
     </LinearLayout>
 
     <TabHost
@@ -95,5 +85,104 @@
                 android:divider="@drawable/divider" />
         </LinearLayout>
     </TabHost>
+
+    <!-- 底部导航栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:background="@color/card"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/nav_home"
+            style="@style/NavItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/nav_ic_home" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/nav_home"
+                android:textColor="@color/nav_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_search"
+            style="@style/NavItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/nav_ic_search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/nav_search"
+                android:textColor="@color/nav_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_download"
+            style="@style/NavItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/nav_ic_download" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/nav_download"
+                android:textColor="@color/nav_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_fav"
+            style="@style/NavItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/nav_ic_fav" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/nav_fav"
+                android:textColor="@color/nav_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_me"
+            style="@style/NavItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/nav_ic_me" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/nav_me"
+                android:textColor="@color/nav_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

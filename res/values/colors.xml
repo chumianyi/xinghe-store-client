@@ -19,4 +19,5 @@
     <color name="tag_pwa">#F2994A</color>
     <color name="danger">#E5484D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="nav_selected_bg">#EFF0FD</color>
 </resources>

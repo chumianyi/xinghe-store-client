@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 内置浏览器（网盘解析页） -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/HeaderBar">
+
+        <TextView
+            android:id="@+id/btn_back"
+            style="@style/HeaderButton"
+            android:text="@string/back" />
+
+        <TextView
+            android:id="@+id/header_title"
+            style="@style/HeaderTitle"
+            android:text="@string/web_title" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/web_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone" />
+
+    <WebView
+        android:id="@+id/web_view"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

@@ -51,25 +51,16 @@ public class Xinghe extends BaseActivity {
 
         sort = Prefs.getSort(this);
 
-        // 头部按钮
-        findViewById(R.id.btn_header_search).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(Xinghe.this, SearchActivity.class));
-            }
-        });
-        findViewById(R.id.btn_header_me).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (Prefs.isLoggedIn(Xinghe.this)) {
-                    startActivity(new Intent(Xinghe.this, ProfileActivity.class));
-                } else {
-                    startActivity(new Intent(Xinghe.this, LoginActivity.class));
-                }
-            }
-        });
+        // 底部导航
+        setupBottomNav();
 
         listView = (ListView) findViewById(R.id.list_apps);
         emptyView = (TextView) findViewById(R.id.empty_view);
         listView.setEmptyView(emptyView);
+
+        // 默认选中"首页"（android:selected 是 API 11 属性，代码设置）
+        View home = findViewById(R.id.nav_home);
+        if (home != null) home.setSelected(true);
 
         // 底部"加载更多"
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -138,6 +129,43 @@ public class Xinghe extends BaseActivity {
         });
 
         loadPage(1, false);
+    }
+
+    /** 底部导航：首页 / 搜索 / 下载记录 / 收藏 / 我的 */
+    private void setupBottomNav() {
+        View.OnClickListener l = new View.OnClickListener() {
+            public void onClick(View v) {
+                int id = v.getId();
+                if (id == R.id.nav_home) {
+                    if (tabHost != null) tabHost.setCurrentTab(0);
+                } else if (id == R.id.nav_search) {
+                    startActivity(new Intent(Xinghe.this, SearchActivity.class));
+                } else if (id == R.id.nav_download) {
+                    startActivity(new Intent(Xinghe.this, DownloadsActivity.class));
+                } else if (id == R.id.nav_fav) {
+                    startActivity(new Intent(Xinghe.this, FavoritesActivity.class));
+                } else if (id == R.id.nav_me) {
+                    if (Prefs.isLoggedIn(Xinghe.this)) {
+                        startActivity(new Intent(Xinghe.this, ProfileActivity.class));
+                    } else {
+                        startActivity(new Intent(Xinghe.this, LoginActivity.class));
+                    }
+                }
+            }
+        };
+        findViewById(R.id.nav_home).setOnClickListener(l);
+        findViewById(R.id.nav_search).setOnClickListener(l);
+        findViewById(R.id.nav_download).setOnClickListener(l);
+        findViewById(R.id.nav_fav).setOnClickListener(l);
+        findViewById(R.id.nav_me).setOnClickListener(l);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 回到首页时恢复"首页"选中态
+        View home = findViewById(R.id.nav_home);
+        if (home != null) home.setSelected(true);
     }
 
     private void loadPage(final int targetPage, final boolean append) {
@@ -213,11 +241,12 @@ public class Xinghe extends BaseActivity {
         menu.add(0, 4, 0, R.string.sort_name);
         menu.add(0, 5, 0, R.string.menu_ranking);
         menu.add(0, 6, 0, R.string.menu_favorites);
-        menu.add(0, 7, 0, R.string.menu_history);
-        menu.add(0, 8, 0, R.string.menu_submit);
-        menu.add(0, 9, 0, R.string.menu_messages);
-        menu.add(0, 10, 0, R.string.menu_settings);
-        menu.add(0, 11, 0, R.string.menu_about);
+        menu.add(0, 7, 0, R.string.menu_downloads);
+        menu.add(0, 8, 0, R.string.menu_history);
+        menu.add(0, 9, 0, R.string.menu_submit);
+        menu.add(0, 10, 0, R.string.menu_messages);
+        menu.add(0, 11, 0, R.string.menu_settings);
+        menu.add(0, 12, 0, R.string.menu_about);
         return true;
     }
 
@@ -253,15 +282,10 @@ public class Xinghe extends BaseActivity {
                 startActivity(new Intent(this, FavoritesActivity.class));
                 return true;
             case 7:
-                startActivity(new Intent(this, HistoryActivity.class));
+                startActivity(new Intent(this, DownloadsActivity.class));
                 return true;
             case 8:
-                if (!Prefs.isLoggedIn(this)) {
-                    Toast.makeText(this, R.string.login_required, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, LoginActivity.class));
-                    return true;
-                }
-                startActivity(new Intent(this, SubmitActivity.class));
+                startActivity(new Intent(this, HistoryActivity.class));
                 return true;
             case 9:
                 if (!Prefs.isLoggedIn(this)) {
@@ -269,12 +293,20 @@ public class Xinghe extends BaseActivity {
                     startActivity(new Intent(this, LoginActivity.class));
                     return true;
                 }
-                startActivity(new Intent(this, MessagesActivity.class));
+                startActivity(new Intent(this, SubmitActivity.class));
                 return true;
             case 10:
-                startActivity(new Intent(this, SettingsActivity.class));
+                if (!Prefs.isLoggedIn(this)) {
+                    Toast.makeText(this, R.string.login_required, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    return true;
+                }
+                startActivity(new Intent(this, MessagesActivity.class));
                 return true;
             case 11:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case 12:
                 showAbout();
                 return true;
         }

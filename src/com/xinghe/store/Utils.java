@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -174,5 +175,123 @@ public final class Utils {
     public static String safeFileName(String name) {
         if (name == null) return "app";
         return name.replaceAll("[\\\\/:*?\"<>|\\s]", "_");
+    }
+
+    /** 人类可读的文件大小 */
+    public static String formatSize(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024L * 1024) return String.format("%.1f KB", bytes / 1024.0);
+        if (bytes < 1024L * 1024 * 1024) return String.format("%.1f MB", bytes / 1048576.0);
+        return String.format("%.2f GB", bytes / 1073741824.0);
+    }
+
+    /** 按扩展名推断 MIME */
+    public static String mimeOfFile(String name) {
+        String lower = name.toLowerCase();
+        if (lower.endsWith(".apk")) return "application/vnd.android.package-archive";
+        if (lower.endsWith(".ipa")) return "application/octet-stream";
+        if (lower.endsWith(".zip")) return "application/zip";
+        if (lower.endsWith(".rar")) return "application/x-rar-compressed";
+        if (lower.endsWith(".7z")) return "application/x-7z-compressed";
+        if (lower.endsWith(".png")) return "image/png";
+        if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+        if (lower.endsWith(".txt")) return "text/plain";
+        if (lower.endsWith(".pdf")) return "application/pdf";
+        return "application/octet-stream";
+    }
+
+    /**
+     * 取文件的对外 Uri。
+     * API 24+ 上 file:// 会被 StrictMode 拒绝，走应用内置 ApkFileProvider。
+     */
+    public static Uri fileUri(Context c, File f) {
+        if (hasApi(24)) {
+            try {
+                return Uri.parse("content://" + c.getPackageName() + ".fileprovider/files/"
+                        + Uri.encode(f.getName()));
+            } catch (Exception e) {
+                // 落到 file://
+            }
+        }
+        return Uri.fromFile(f);
+    }
+
+    /** 安装 APK */
+    public static void installApk(Activity a, File apk) {
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(fileUri(a, apk), "application/vnd.android.package-archive");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (hasApi(24)) {
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            a.startActivity(i);
+        } catch (Exception e) {
+            toastShort(a, "没有可安装此应用的程序");
+        }
+    }
+
+    /** 分享文件（IPA 等） */
+    public static void shareFile(Activity a, File f) {
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType(mimeOfFile(f.getName()));
+            i.putExtra(Intent.EXTRA_STREAM, fileUri(a, f));
+            i.putExtra(Intent.EXTRA_SUBJECT, f.getName());
+            if (hasApi(24)) {
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            a.startActivity(Intent.createChooser(i, "分享 " + f.getName()));
+        } catch (Exception e) {
+            toastShort(a, "分享失败");
+        }
+    }
+
+    /** 用其他应用打开文件 */
+    public static void openFile(Activity a, File f) {
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(fileUri(a, f), mimeOfFile(f.getName()));
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (hasApi(24)) {
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            a.startActivity(i);
+        } catch (Exception e) {
+            toastShort(a, "没有可打开此文件的应用");
+        }
+    }
+
+    /** 从 Content-Disposition 头里解析文件名，失败返回 null */
+    public static String fileNameFromDisposition(String cd, String url) {
+        if (cd != null) {
+            java.util.regex.Matcher m =
+                    java.util.regex.Pattern.compile("filename\\*?=([^;]+)", java.util.regex.Pattern.CASE_INSENSITIVE)
+                            .matcher(cd);
+            if (m.find()) {
+                String name = m.group(1).trim().replace("\"", "");
+                int semi = name.indexOf(';');
+                if (semi > 0) name = name.substring(0, semi);
+                // UTF-8''xxx 形式
+                int idx = name.toLowerCase().indexOf("''");
+                if (name.toLowerCase().startsWith("utf-8") && idx >= 0) {
+                    try {
+                        name = java.net.URLDecoder.decode(name.substring(idx + 2), "UTF-8");
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+                if (name.length() > 0 && name.indexOf('/') < 0 && name.indexOf('\\') < 0) {
+                    return name;
+                }
+            }
+        }
+        if (url != null) {
+            String path = Uri.parse(url).getLastPathSegment();
+            if (path != null && path.length() > 0 && path.indexOf('/') < 0 && path.indexOf('\\') < 0) {
+                return path;
+            }
+        }
+        return null;
     }
 }

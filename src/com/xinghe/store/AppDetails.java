@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.xinghe.store.api.Api;
 import com.xinghe.store.api.App;
-import com.xinghe.store.net.Http;
+import com.xinghe.store.net.Downloader;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -176,7 +176,7 @@ public class AppDetails extends BaseActivity {
         }
     }
 
-    private void addNetdiskButton(final String url, String label) {
+    private void addNetdiskButton(final String url, final String label) {
         if (url == null || url.length() == 0) return;
         Button b = new Button(this);
         b.setLayoutParams(new LinearLayout.LayoutParams(
@@ -187,12 +187,20 @@ public class AppDetails extends BaseActivity {
         b.setBackgroundResource(R.drawable.btn_secondary);
         b.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Utils.copyToClipboard(AppDetails.this, url);
-                Utils.toastShort(AppDetails.this, R.string.copied);
-                Utils.openUrl(AppDetails.this, url);
+                // 网盘链接统一进应用内置浏览器解析，不跳出应用
+                openInAppWeb(url, label);
             }
         });
         netdiskButtons.addView(b);
+    }
+
+    /** 在内置浏览器中打开网盘/解析链接 */
+    private void openInAppWeb(String url, String title) {
+        Intent i = new Intent(AppDetails.this, WebActivity.class);
+        i.putExtra("url", url);
+        i.putExtra("title", title);
+        i.putExtra("app_id", appId);
+        startActivity(i);
     }
 
     // ---------- 下载 ----------
@@ -232,66 +240,41 @@ public class AppDetails extends BaseActivity {
                     return;
                 }
                 if (direct) {
-                    startFileDownload(url);
+                    // 文件直链：应用内下载器直接下载
+                    String fileName = urlFileName(url, app.name);
+                    Utils.toastShort(AppDetails.this,
+                            getString(R.string.download_started, fileName));
+                    Downloader.download(AppDetails.this, url, fileName, appId,
+                            new Downloader.Callback() {
+                                public void onFinished(File file, String mime, String error) {
+                                    if (error != null) {
+                                        Utils.toastShort(AppDetails.this,
+                                                getString(R.string.download_failed) + "：" + error);
+                                        return;
+                                    }
+                                    Utils.toast(AppDetails.this,
+                                            getString(R.string.download_done, file.getName()));
+                                    notifyDone(file.getName());
+                                    // 下载完毕 → 跳转下载记录（APK 可安装 / IPA 可分享）
+                                    startActivity(new Intent(AppDetails.this,
+                                            DownloadsActivity.class));
+                                }
+                            });
                 } else {
-                    Utils.copyToClipboard(AppDetails.this, url);
-                    Utils.toastShort(AppDetails.this, "链接已复制，请在浏览器中打开");
-                    Utils.openUrl(AppDetails.this, url);
+                    // 网盘/解析页：进内置浏览器，检测到下载再弹窗
+                    openInAppWeb(url, getString(R.string.web_title));
                 }
             }
         }.execute();
     }
 
-    /** 直链文件：自带下载器（API 3 无 DownloadManager） */
-    private void startFileDownload(final String url) {
-        String fileName = Utils.safeFileName(app.name != null && app.name.length() > 0
-                ? app.name : "download");
-        if (!fileName.contains(".")) {
-            String ext = extOf(url);
-            if (ext != null) fileName = fileName + ext;
-        }
-        final File dir = new File(Environment.getExternalStorageDirectory(), "xinghe");
-        if (!dir.exists()) dir.mkdirs();
-        final File target = new File(dir, fileName);
-        final ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setMessage("正在下载 " + fileName + " …");
-        dlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dlg.setIndeterminate(true);
-        dlg.setCancelable(true);
-        dlg.show();
-
-        new AsyncTask<Void, Integer, String>() {
-            protected String doInBackground(Void... p) {
-                try {
-                    Http.downloadToFile(url, target.getAbsolutePath(), new Http.ProgressCallback() {
-                        public void onProgress(long done, long total) {
-                            publishProgress(total > 0 ? (int) (done * 100 / total) : -1);
-                        }
-                    });
-                    return null;
-                } catch (Exception e) {
-                    return e.getMessage();
-                }
-            }
-
-            protected void onProgressUpdate(Integer... values) {
-                if (values[0] != null && values[0] >= 0) {
-                    dlg.setIndeterminate(false);
-                    dlg.setProgress(Math.max(1, values[0]));
-                }
-            }
-
-            protected void onPostExecute(String error) {
-                dlg.dismiss();
-                if (error != null) {
-                    Utils.toastShort(AppDetails.this, R.string.download_failed + "：" + error);
-                    return;
-                }
-                Utils.toast(AppDetails.this, getString(R.string.download_done, target.getName()));
-                notifyDone(target.getName());
-                offerOpen(target);
-            }
-        }.execute();
+    /** 直链文件名：优先取应用名 + 链接扩展名 */
+    private static String urlFileName(String url, String appName) {
+        String ext = extOf(url);
+        String base = Utils.safeFileName(appName != null && appName.length() > 0
+                ? appName : "download");
+        if (base.contains(".")) return base;
+        return ext != null ? base + ext : base;
     }
 
     private static String extOf(String url) {
@@ -309,9 +292,12 @@ public class AppDetails extends BaseActivity {
         try {
             Notification n = new Notification(R.drawable.ic_launcher,
                     getString(R.string.download_done, fileName), System.currentTimeMillis());
+            File f = new File(Environment.getExternalStorageDirectory(), "xinghe/" + fileName);
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setDataAndType(Uri.fromFile(new File(
-                    Environment.getExternalStorageDirectory(), "xinghe/" + fileName)), mimeOf(fileName));
+            i.setDataAndType(Utils.fileUri(this, f), Utils.mimeOfFile(fileName));
+            if (Utils.hasApi(24)) {
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
             n.setLatestEventInfo(this, getString(R.string.app_name),
                     getString(R.string.download_done, fileName),
                     android.app.PendingIntent.getActivity(this, 0, i, 0));
@@ -321,36 +307,6 @@ public class AppDetails extends BaseActivity {
         } catch (Exception e) {
             // 通知失败不影响主流程
         }
-    }
-
-    private static String mimeOf(String name) {
-        String lower = name.toLowerCase();
-        if (lower.endsWith(".apk")) return "application/vnd.android.package-archive";
-        if (lower.endsWith(".ipa")) return "application/octet-stream";
-        if (lower.endsWith(".zip")) return "application/zip";
-        if (lower.endsWith(".rar")) return "application/x-rar-compressed";
-        if (lower.endsWith(".7z")) return "application/x-7z-compressed";
-        if (lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/*";
-        return "application/octet-stream";
-    }
-
-    private void offerOpen(final File f) {
-        new android.app.AlertDialog.Builder(this)
-                .setTitle(R.string.download_done)
-                .setMessage("文件已保存到：" + f.getAbsolutePath())
-                .setPositiveButton("打开", new android.content.DialogInterface.OnClickListener() {
-                    public void onClick(android.content.DialogInterface d, int which) {
-                        try {
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setDataAndType(Uri.fromFile(f), mimeOf(f.getName()));
-                            startActivity(i);
-                        } catch (Exception e) {
-                            Utils.toastShort(AppDetails.this, "没有可打开此文件的应用");
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
     }
 
     // ---------- 收藏 ----------

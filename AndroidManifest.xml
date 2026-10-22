@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xinghe.store"
-    android:versionCode="1"
-    android:versionName="1.0.0">
+    android:versionCode="2"
+    android:versionName="1.1.0">
 
     <uses-sdk android:minSdkVersion="3" />
 
@@ -47,6 +47,17 @@
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="com.xinghe.store.SettingsActivity"
             android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="com.xinghe.store.WebActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="com.xinghe.store.DownloadsActivity"
+            android:configChanges="keyboardHidden|orientation" />
+
+        <!-- API 24+ 上安装/分享下载文件用的 FileProvider -->
+        <provider
+            android:name="com.xinghe.store.ApkFileProvider"
+            android:authorities="com.xinghe.store.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
 
     </application>
 </manifest>
